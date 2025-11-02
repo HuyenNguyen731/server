@@ -67,6 +67,26 @@ app.get("/api/all-guest", async (req, res) => {
   }
 });
 
+// GET GUEST BY SLUG
+app.get("/api/all-guest/:slug", async (req, res) => {
+  try {
+    const { slug } = req.params; // Lấy slug từ URL
+
+    // Tìm user theo slug
+    const user = await User.findOne({ slug });
+
+    if (!user) {
+      return res.status(404).json({ message: "Guest not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching guest:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 // DELETE GUEST BY ID
 app.delete("/api/users/:id", async (req, res) => {
   try {
@@ -80,6 +100,32 @@ app.delete("/api/users/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// TOGGLE hidden của một Wish
+app.patch("/api/wishes/:id/toggle-hidden", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Lấy wish hiện tại
+    const wish = await Wishes.findById(id);
+    if (!wish) {
+      return res.status(404).json({ message: "Wish not found" });
+    }
+
+    // Đảo trạng thái hidden
+    wish.hidden = !wish.hidden;
+    await wish.save();
+
+    res.status(200).json({
+      message: "Hidden toggled successfully",
+      data: wish,
+    });
+  } catch (error) {
+    console.error("Error toggling hidden:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 // DELETE Wishes BY ID
 app.delete("/api/wishes/:id", async (req, res) => {
