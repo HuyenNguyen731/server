@@ -8,6 +8,7 @@ const UserSchema = mongoose.Schema({
   slug: {
     type: String,
     require: [true, "Please enter slug"],
+    unique: true,
   },
 });
 
