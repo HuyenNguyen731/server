@@ -33,7 +33,7 @@ app.post("/api/create-wishes", async (req, res) => {
 // GET ALL wishes
 app.get("/api/all-wishes", async (req, res) => {
   try {
-    const wishes = await Wishes.find(); // lấy tất cả user
+    const wishes = await Wishes.find().sort({ createdAt: -1 });
     res.status(200).json(wishes);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -86,7 +86,6 @@ app.get("/api/all-guest/:slug", async (req, res) => {
   }
 });
 
-
 // DELETE GUEST BY ID
 app.delete("/api/users/:id", async (req, res) => {
   try {
@@ -125,7 +124,6 @@ app.patch("/api/wishes/:id/toggle-hidden", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 // DELETE Wishes BY ID
 app.delete("/api/wishes/:id", async (req, res) => {
